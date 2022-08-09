@@ -1,54 +1,29 @@
 #!/usr/bin/python3
-import json, sys, numbers, os
-import colorama
+import json, sys, os, re
 from colorama import Fore
 
 def printRules(jsonEl, valBySort):
-    num = 10
-    i = 1
-    
     try:
         num = int(sys.argv[len(sys.argv) - 1])
     except:
-        num = num
+        num = 10
     
+    i = 1
     for el in jsonEl:
-        try:
-            print(Fore.RED + str(i) + ". " + str(valBySort) + ": " + str(el[valBySort]) + Fore.WHITE)
-            os.system("grep " + str(el["signature_id"]) + " " + str(sys.argv[2]))
-        except IndexError:
-            break
+        print(Fore.RED + str(i) + ". " + str(valBySort) + ": " + str(el[valBySort]) + Fore.WHITE)
+        os.system("grep -E ^alert " + str(sys.argv[2]) + " |  grep -E sid:[\ ]{0,1}" + str(el["signature_id"]))
 
-        if i == num:
+        i += 1
+        if i > num:
             break
         
-        i = i + 1
-
 def fixJsonFileSuri():
-    goodFormatJson = ""
-    with open(sys.argv[1]) as f:
-        countBraces = 0
-        while True:
-            c = f.read(1)
-            if not c:
-                goodFormatJson = goodFormatJson[:-1]
-                break
+    with open(sys.argv[1], 'r') as file:
+        correctFormatJson = file.read()
+    
+    return '[' + re.sub('}{', '},{', correctFormatJson) + ']'
 
-            if c == '{':
-                countBraces = countBraces + 1
-            elif c == '}':
-                countBraces = countBraces - 1
-
-            goodFormatJson = goodFormatJson + c
-            if countBraces == 0:
-                goodFormatJson = goodFormatJson + ','
-
-        goodFormatJson = '[' + goodFormatJson + ']'
-
-    return goodFormatJson
-
-fixedStr = fixJsonFileSuri()
-jsonStr = json.loads(fixedStr)
+jsonStr = json.loads(fixJsonFileSuri())
 dictRules = {
         "ticks" : "ticks_total",
         "average ticks" : "ticks_avg",
@@ -60,7 +35,6 @@ dictRules = {
     }
 
 for el in jsonStr:
-    num = (60 - len(el['sort'])) // 2
-    print(num*"*" + el['sort'] + num*"*")
+    print(20*"*" + el['sort'])
     printRules(el["rules"], dictRules[el['sort']])
-    print(59*"*" + '\n')
+    print(30*"*" + '\n')
