@@ -1,9 +1,5 @@
 #!/bin/bash
 
-RED='\033[0;31m'
-NC='\033[0m'
-BLUE='\033[0;34m'
-
 declare -a metadata_kwds=("msg" "sid" "rev" "gid" "classtype" "reference" "priority" "metadata" "target"
                           "content" "nocase" "depth" "startswith" "endswith" "offset" "distance" "within"
                           "isdataat" "bsize" "dsize" "byte_test" "byte_math" "byte_jump" "byte_extract" "rpc" "replace" "pcre")

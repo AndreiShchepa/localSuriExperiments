@@ -29,9 +29,8 @@ do
 		continue
 	fi
     
-    #compare_str "tcp" "$line" ${tcp_kwds[@]}
-    #((tcp=tcp+?)
-
+    compare_str "tcp" "$line" ${tcp_kwds[@]}
+    ((tcp=tcp+$?)
     compare_str "ip" "$line" ${ip_kwds[@]}
     ((ip=ip+$?))
 done < $1
